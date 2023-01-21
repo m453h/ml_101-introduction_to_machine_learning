@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static',filename='node_modules/bootstrap/dist/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='node_modules/bootstrap-icons/font/bootstrap-icons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+    <script src="{{ url_for('static',filename='node_modules/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
+    <title>Diabetes Predictor</title>
+  </head>
+  <body>
+
+   <!-- navbar -->
+
+    <nav id="my-navigation-bar" class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container-lg">
+            <a href="/" class="navbar-brand">
+              <img src="{{ url_for('static', filename='images/logo.png') }}" style="height:70px;" />
+            </a>
+            <!-- Toggle button for mobile nav -->
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#main-nav"
+                    aria-controls="main-nav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- navbar links -->
+            <div class="collapse navbar-collapse justify-content-end align-center" id="main-nav">
+                  <ul class="navbar-nav">
+                      <li class="nav-item"><a href="/" class=" nav-link">Home</a></li>
+                      <li class="nav-item"><a href="/" class=" nav-link">About</a></li>
+                      <li class="nav-item"><a href="/" class=" nav-link">Contact</a></li>
+                  </ul>
+
+            </div>
+        </div>
+
+    </nav>
+
+<section id="intro">
+      <div class="container-lg">
+              <h1>Welcome To Diabetes Predictor</h1>
+              <h4 class="mb-3">A demo web app illustrating how to deploy a machine learning model...</h4>
+              <a href="#" class="btn btn-warning learn-more">Learn More</a>
+      </div>
+</section>
+  <section id="predictor" class="mt-1">
+    <div class="container-lg">
+       <div class="bg-white shadow radius-10" id="predictor-form-container">
+                <h3 class="rounded-top-left-1 rounded-top-right-1">
+                {% if display_results == False %} 
+                       Enter Data to get Prediction Results
+                {% else %}
+                       Prediction Results
+                {% endif %}
+                </h3>
+               <div class="container">
+                   <div class="row">
+                       <div class="col-lg-12">
+                        {% if display_results == False %}   
+                            <form method="post">
+                                <div class="row form-component">
+                                    {% if message is not none %}
+                                        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                                            <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+                                                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                            </symbol>
+                                        </svg>
+                                        
+                                        <div class="col-lg-12">
+                                            <div class="alert alert-warning d-flex align-items-center" role="alert">
+                                                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                                                <div>
+                                                    {{ message }}
+                                                </div>
+                                            </div>   
+                                        </div>                        
+                                    {% endif %}
+
+                                    <div class="col-lg-3">
+                                            <div class="mb-3">
+                                                <label for="Age" class="form-label">Age</label><i class="bi bi-info-circle-fill label-details"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Age (years)"></i>
+                                                <input type="number" class="form-control" id="Age" name="age" placeholder="">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="glucose" class="form-label">Glucose</label> <i class="bi bi-info-circle-fill label-details"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Plasma glucose concentration a 2 hours in an oral glucose tolerance test"></i>
+                                                <input type="text" class="form-control" id="glucose" name="glucose" placeholder="">
+                                            </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                            <div class="mb-3">
+                                                <label for="blood_pressure" class="form-label">Blood Pressure</label><i class="bi bi-info-circle-fill label-details"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Diastolic blood pressure (mm Hg)"></i>
+                                                <input type="text" class="form-control" id="blood_pressure" name="blood_pressure" placeholder="">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="SkinThickness" class="form-label">Skin Thickness</label><i class="bi bi-info-circle-fill label-details"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Triceps skin fold thickness (mm)"></i>
+                                                <input type="text" class="form-control" id="SkinThickness" name="skin_thickness" placeholder="">
+                                            </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                            <div class="mb-3">
+                                                <label for="Insulin" class="form-label">Insulin</label><i class="bi bi-info-circle-fill label-details"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="2-Hour serum insulin (mu U/ml)"></i>
+                                                <input type="text" class="form-control" id="Insulin" name="insulin" placeholder="">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="BMI" class="form-label">BMI</label><i class="bi bi-info-circle-fill label-details"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Body mass index (weight in kg/(height in m)^2)"></i>
+                                                <input type="text" class="form-control" id="BMI" name="bmi" placeholder="">
+                                            </div>
+                                    </div>
+
+                                        <div class="col-lg-3">
+                                            <div class="mb-3">
+                                                <label for="DiabetesPedigreeFunction" class="form-label">Diabetes Pedigree Function</label><i class="bi bi-info-circle-fill label-details"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Diabetes pedigree function"></i>
+                                                <input type="text" class="form-control" id="DiabetesPedigreeFunction" name="diabetes_pedigree_fn" placeholder="">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="pregnancies_no" class="form-label">Number of Pregnancies</label><i class="bi bi-info-circle-fill label-details"  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Number of times pregnant"></i>
+                                                <input type="number" class="form-control" id="pregnancies_no" name="pregnancies_no" placeholder="">
+                                            </div>
+
+                                    </div>
+                                    <div class="col-lg-12">
+                                            <button class="btn btn-primary">Make Prediction</button>
+
+                                    </div>
+                                </div>
+
+
+                            </form>
+                        {% else %}
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Attribute</th>
+                                            <th scope="col">Value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>Age</td>
+                                                <td>{{ request.form.get('age') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td>Glucose</td>
+                                                <td>{{ request.form.get('glucose') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td>Blood Pressure</td>
+                                                <td>{{ request.form.get('blood_pressure') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">4</th>
+                                                <td>Skin Thickness</td>
+                                                <td>{{ request.form.get('skin_thickness') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">5</th>
+                                                <td>BMI</td>
+                                                <td>{{ request.form.get('bmi') }}</td>
+                                            </tr>
+                                             <tr>
+                                                <th scope="row">6</th>
+                                                <td>Insulin</td>
+                                                <td>{{ request.form.get('insulin') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">7</th>
+                                                <td>Diabetes Pedigree Function</td>
+                                                <td>{{ request.form.get('diabetes_pedigree_fn') }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">8</th>
+                                                <td>Number of Pregnancies</td>
+                                                <td>{{ request.form.get('pregnancies_no') }}</td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-lg-6 text-center" id="predicted-outcome">
+                                     <img src="{{ url_for('static', filename='images/microscope.png') }}" class="mb-4" />
+                                        <h2 class="mb-4">Predicted Outcome</h2>
+                                    {% if predicted == 0 %}
+                                        <h4 class="bg-success radius-10">No Diabetes</h4>
+                                    {% elif predicted == 1 %}
+                                        <h4 class="bg-danger radius-10">Has Diabetes</h4>
+                                    {% endif %}
+                                    <p class="mt-4">
+                                    <a href="/">Make another prediction</a>
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
+                       </div>
+
+
+                   </div>
+               </div>
+
+       </div>
+    </div>
+
+
+</section>
+
+ <section id="footer">
+    <div class="container-lg">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <h4 class="mb-2">Site Built using</h4>
+                <ul class="list-unstyled">
+                    <li><a href="https://icons8.com/" target="_blank" class="text-decoration-none">Icons 8</a></li>
+                    <li><a href="https://getbootstrap.com/" target="_blank" class="text-decoration-none">Bootstrap</a></li>
+                    <li><a href="https://flask.palletsprojects.com/en/2.2.x/" target="_blank" class="text-decoration-none">Flask</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <h4 class="mb-2">Site links</h4>
+                <ul class="list-unstyled">
+                    <li><a href="#" class="text-decoration-none">Home</a></li>
+                    <li><a href="#" class="text-decoration-none">About</a></li>
+                    <li><a href="#" class="text-decoration-none">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-4 mb-2">
+                <h4>Contact us</h4>
+                <ul class="list-unstyled">
+                    <li>
+                    <p class="text-decoration-none"><span class="fw-bold">Phone:</span> +255 000 000 000</p></li>
+                    <p class="text-decoration-none"><span class="fw-bold">Support Email:</span> support@acme.com</p></li>
+                    <p class="text-decoration-none"><span class="fw-bold">Inquiries Email: </span>info@acme.com</p></li>
+                </ul>
+            </div>
+
+
+        </div>
+    </div>
+</section>
+
+<section id="lower-footer">
+    <div class="container-lg">
+        <div class="row align-items-center">
+            <p class="text-white">Copyright &copy; {{ now.year }} Diabetes Predictor - All Rights Reserved</p>
+        </div>
+    </div>
+
+</section>
+
+<script type="text/javascript">
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+</script>
+</body>
+</html>
